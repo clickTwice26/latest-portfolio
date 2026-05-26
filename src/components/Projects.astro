@@ -1,6 +1,8 @@
 ---
 import { siteConfig } from "../config";
 const hasProjects = siteConfig.projects && siteConfig.projects.length > 0;
+const total = siteConfig.projects.length;
+const accent = siteConfig.accentColor;
 ---
 
 {
@@ -8,93 +10,190 @@ const hasProjects = siteConfig.projects && siteConfig.projects.length > 0;
     <section id="projects" class="p-8 sm:p-12 md:p-16 lg:p-24">
       <div>
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
+          <!-- Section heading -->
           <div class="lg:col-span-4">
             <h2 class="text-3xl sm:text-4xl md:text-5xl xl:text-7xl font-bold text-gray-900">
               Projects
             </h2>
             <div
               class="w-[75px] h-[5px] mt-2 rounded-full"
-              style={`background-color: ${siteConfig.accentColor}`}
+              style={`background-color: ${accent}`}
             />
           </div>
 
+          <!-- Carousel column -->
           <div class="lg:col-span-8">
-            <div class="space-y-8">
-              {siteConfig.projects.map((project, index) => {
-                const Component = project.link ? "a" : "div";
-                const linkProps = project.link
-                  ? {
-                      href: project.link,
-                      target: "_blank",
-                      rel: "noopener noreferrer",
-                    }
-                  : {};
-
-                return (
-                  <div class="group relative">
-                    <Component
-                      {...linkProps}
-                      class={`block relative p-4 sm:p-6 md:p-8 bg-gray-50 rounded-xl sm:rounded-2xl border border-gray-200 transition-all duration-300 ${
-                        project.link
-                          ? "hover:bg-white hover:shadow-xl hover:border-gray-300 hover:-translate-y-1"
-                          : ""
-                      }`}
-                    >
-                      {project.link && (
-                        <div class="absolute top-4 right-4 sm:top-6 sm:right-6 md:top-8 md:right-8 w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 flex items-center justify-center bg-gray-900 rounded-full text-white transition-all duration-300 group-hover:bg-gray-700">
-                          <svg
-                            class="w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M7 17L17 7M17 7H7M17 7V17"
+            <div id="projects-carousel" class="relative select-none">
+              <!-- Slide track -->
+              <div class="overflow-hidden rounded-2xl">
+                <div
+                  id="carousel-track"
+                  class="flex transition-transform duration-500 ease-in-out"
+                >
+                  {siteConfig.projects.map((project, index) => (
+                    <div class="w-full flex-shrink-0">
+                      <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
+                        <!-- Image -->
+                        {project.image ? (
+                          <div class="relative aspect-video overflow-hidden bg-gray-100 group/img">
+                            <img
+                              src={project.image}
+                              alt={project.name}
+                              class="w-full h-full object-cover transition-transform duration-500 group-hover/img:scale-105"
+                              loading={index === 0 ? "eager" : "lazy"}
                             />
-                          </svg>
-                        </div>
-                      )}
-
-                      <div class="space-y-4">
-                        <div>
-                          <span
-                            class="text-sm font-mono"
-                            style={{ color: siteConfig.accentColor }}
-                          >
-                            0{index + 1}
-                          </span>
-                          <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mt-1">
-                            {project.name}
-                          </h3>
-                        </div>
-
-                        <p
-                          class={`text-base sm:text-lg text-gray-600 leading-relaxed ${project.link ? "pr-12 sm:pr-14 md:pr-16" : ""}`}
-                        >
-                          {project.description}
-                        </p>
-
-                        {project.skills && project.skills.length > 0 && (
-                          <div class="flex flex-wrap gap-1.5 sm:gap-2 pt-2">
-                            {project.skills.map((skill) => (
-                              <span
-                                class={`px-2.5 sm:px-3 py-1 sm:py-1.5 bg-gray-900 text-white rounded-md sm:rounded-lg text-xs sm:text-sm font-medium transition-all duration-300 ${
-                                  project.link ? "group-hover:bg-gray-800" : ""
-                                }`}
+                            {project.link && (
+                              <a
+                                href={project.link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="absolute top-4 right-4 w-10 h-10 flex items-center justify-center bg-gray-900/75 backdrop-blur-sm rounded-full text-white hover:bg-gray-900 transition-all duration-200"
+                                aria-label={`Visit ${project.name}`}
                               >
-                                {skill}
-                              </span>
-                            ))}
+                                <svg
+                                  class="w-4 h-4"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M7 17L17 7M17 7H7M17 7V17"
+                                  />
+                                </svg>
+                              </a>
+                            )}
+                          </div>
+                        ) : (
+                          <div
+                            class="aspect-video flex items-center justify-center text-white/30 text-6xl font-bold"
+                            style={`background: linear-gradient(135deg, ${accent}33 0%, ${accent}11 100%)`}
+                          >
+                            {String(index + 1).padStart(2, "0")}
                           </div>
                         )}
+
+                        <!-- Content -->
+                        <div class="p-6 md:p-8">
+                          <span
+                            class="text-sm font-mono"
+                            style={`color: ${accent}`}
+                          >
+                            {String(index + 1).padStart(2, "0")}
+                          </span>
+                          <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mt-1 mb-3">
+                            {project.name}
+                          </h3>
+                          <p class="text-base sm:text-lg text-gray-600 leading-relaxed">
+                            {project.description}
+                          </p>
+                          {project.skills && project.skills.length > 0 && (
+                            <div class="flex flex-wrap gap-2 mt-4">
+                              {project.skills.map((skill) => (
+                                <span class="px-3 py-1.5 bg-gray-900 text-white rounded-lg text-sm font-medium">
+                                  {skill}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    </Component>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <!-- Controls row: prev | dots | next -->
+              <div class="flex items-center justify-between mt-5">
+                <!-- Prev button -->
+                <button
+                  id="carousel-prev"
+                  aria-label="Previous project"
+                  disabled
+                  class="w-10 h-10 flex items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 shadow-sm transition-all duration-200 hover:border-gray-400 hover:shadow-md disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:border-gray-200 disabled:hover:shadow-sm"
+                >
+                  <svg
+                    class="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M15 19l-7-7 7-7"
+                    />
+                  </svg>
+                </button>
+
+                <!-- Dots + counter -->
+                <div class="flex flex-col items-center gap-2">
+                  <div class="flex items-center gap-2">
+                    {siteConfig.projects.map((_, i) => (
+                      <button
+                        class="carousel-dot h-2 rounded-full transition-all duration-300 focus:outline-none"
+                        data-index={i}
+                        aria-label={`Go to project ${i + 1}`}
+                        style={i === 0 ? `width:24px; background-color:${accent}` : "width:8px; background-color:#d1d5db"}
+                      />
+                    ))}
                   </div>
-                );
-              })}
+                  <span
+                    id="carousel-counter"
+                    class="text-xs text-gray-400 font-mono tabular-nums"
+                  >
+                    1 / {total}
+                  </span>
+                </div>
+
+                <!-- Next button -->
+                <button
+                  id="carousel-next"
+                  aria-label="Next project"
+                  class="w-10 h-10 flex items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 shadow-sm transition-all duration-200 hover:border-gray-400 hover:shadow-md disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:border-gray-200 disabled:hover:shadow-sm"
+                >
+                  <svg
+                    class="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- View all link -->
+            <div class="mt-6">
+              <a
+                href="/projects"
+                class="inline-flex items-center gap-2 text-sm font-medium transition-all duration-200 hover:gap-3"
+                style={`color: ${accent}`}
+              >
+                View all projects
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M17 8l4 4m0 0l-4 4m4-4H3"
+                  />
+                </svg>
+              </a>
             </div>
           </div>
         </div>
@@ -102,3 +201,58 @@ const hasProjects = siteConfig.projects && siteConfig.projects.length > 0;
     </section>
   )
 }
+
+<script define:vars={{ accent, total }}>
+  const track = document.getElementById("carousel-track");
+  const prevBtn = document.getElementById("carousel-prev");
+  const nextBtn = document.getElementById("carousel-next");
+  const counter = document.getElementById("carousel-counter");
+  const dots = document.querySelectorAll(".carousel-dot");
+
+  let current = 0;
+
+  function goTo(index) {
+    current = Math.max(0, Math.min(index, total - 1));
+
+    track.style.transform = `translateX(-${current * 100}%)`;
+    counter.textContent = `${current + 1} / ${total}`;
+
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === total - 1;
+
+    dots.forEach((dot, i) => {
+      if (i === current) {
+        dot.style.width = "24px";
+        dot.style.backgroundColor = accent;
+      } else {
+        dot.style.width = "8px";
+        dot.style.backgroundColor = "#d1d5db";
+      }
+    });
+  }
+
+  prevBtn.addEventListener("click", () => goTo(current - 1));
+  nextBtn.addEventListener("click", () => goTo(current + 1));
+  dots.forEach((dot, i) => dot.addEventListener("click", () => goTo(i)));
+
+  // Touch / swipe support
+  let touchStartX = 0;
+  const carousel = document.getElementById("projects-carousel");
+
+  carousel.addEventListener("touchstart", (e) => {
+    touchStartX = e.touches[0].clientX;
+  }, { passive: true });
+
+  carousel.addEventListener("touchend", (e) => {
+    const delta = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(delta) > 40) {
+      goTo(delta > 0 ? current + 1 : current - 1);
+    }
+  }, { passive: true });
+
+  // Keyboard navigation when focused inside carousel
+  carousel.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight") goTo(current + 1);
+    if (e.key === "ArrowLeft") goTo(current - 1);
+  });
+</script>

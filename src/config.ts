@@ -15,6 +15,7 @@ interface SiteConfig {
     name: string;
     description: string;
     link?: string;
+    image?: string;
     skills: string[];
   }[];
   experience: {
@@ -32,15 +33,15 @@ interface SiteConfig {
 }
 
 export const siteConfig: SiteConfig = {
-  name: "Ryan Fitzgerald",
-  title: "Senior Software Engineer",
-  description: "Portfolio website of Ryan Fitzgerald",
+  name: "Shagato Chowdhury",
+  title: "Backend Developer",
+  description: "Portfolio website of Shagato Chowdhury",
   accentColor: "#1d4ed8",
   social: {
-    email: "your-email@example.com",
-    linkedin: "https://linkedin.com/in/yourprofile",
-    twitter: "https://x.com/rfitzio",
-    github: "https://github.com/RyanFitzgerald",
+    email: "shagato@example.com",
+    linkedin: "https://linkedin.com/in/shagato",
+    twitter: "https://x.com/shagato",
+    github: "https://github.com/clickTwice26",
   },
   aboutMe:
     "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem quos asperiores nihil consequatur tempore cupiditate architecto natus commodi corrupti quas quasi facere est, dignissimos odit nam veniam sapiente ut, vitae eligendi ipsum dolor, nostrum ullam impedit! Corrupti ratione mollitia temporibus necessitatibus, consectetur reiciendis recusandae id, dolorum quaerat, vero pariatur. Ratione!",
@@ -51,6 +52,7 @@ export const siteConfig: SiteConfig = {
       description:
         "One concise email. Five minutes. Every Tuesday. Essential AI news & trends, production-ready libraries, powerful AI tools, and real-world code examples",
       link: "https://aidevroundup.com/?ref=devportfolio",
+      image: "https://picsum.photos/seed/aidev/800/450",
       skills: ["React", "Node.js", "AWS"],
     },
     {
@@ -58,6 +60,7 @@ export const siteConfig: SiteConfig = {
       description:
         "Master the art of building production-ready, full-stack Chrome Extensions using modern web technologies and best practices",
       link: "https://fullstackextensions.com/?ref=devportfolio",
+      image: "https://picsum.photos/seed/chromeext/800/450",
       skills: ["React", "Node.js", "AWS"],
     },
     {
@@ -65,6 +68,7 @@ export const siteConfig: SiteConfig = {
       description:
         "Kit to jump-start your Chrome extension projects with a variety of battle-tested starter templates & examples",
       link: "https://extensionkit.io/?ref=devportfolio",
+      image: "https://picsum.photos/seed/extensionkit/800/450",
       skills: ["React", "Node.js", "AWS"],
     },
   ],
