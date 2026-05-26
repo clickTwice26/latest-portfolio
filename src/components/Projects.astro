@@ -33,37 +33,52 @@ const accent = siteConfig.accentColor;
                   {siteConfig.projects.map((project, index) => (
                     <div class="w-full flex-shrink-0">
                       <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
-                        <!-- Image -->
-                        {project.image ? (
-                          <div class="relative aspect-video overflow-hidden bg-gray-100 group/img">
-                            <img
-                              src={project.image}
-                              alt={project.name}
-                              class="w-full h-full object-cover transition-transform duration-500 group-hover/img:scale-105"
-                              loading={index === 0 ? "eager" : "lazy"}
-                            />
+                        <!-- Image carousel -->
+                        {project.images && project.images.length > 0 ? (
+                          <div class="relative aspect-video overflow-hidden bg-gray-100" data-image-carousel>
+                            <!-- Image track -->
+                            <div
+                              class="flex h-full transition-transform duration-700 ease-in-out"
+                              data-image-track
+                            >
+                              {project.images.map((img, imgIndex) => (
+                                <img
+                                  src={img}
+                                  alt={`${project.name} — screenshot ${imgIndex + 1}`}
+                                  class="w-full h-full object-cover flex-shrink-0"
+                                  loading={index === 0 && imgIndex === 0 ? "eager" : "lazy"}
+                                />
+                              ))}
+                            </div>
                             {project.link && (
                               <a
                                 href={project.link}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                class="absolute top-4 right-4 w-10 h-10 flex items-center justify-center bg-gray-900/75 backdrop-blur-sm rounded-full text-white hover:bg-gray-900 transition-all duration-200"
+                                class="absolute top-4 right-4 w-10 h-10 flex items-center justify-center bg-gray-900/75 backdrop-blur-sm rounded-full text-white hover:bg-gray-900 transition-all duration-200 z-10"
                                 aria-label={`Visit ${project.name}`}
                               >
-                                <svg
-                                  class="w-4 h-4"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M7 17L17 7M17 7H7M17 7V17"
-                                  />
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17L17 7M17 7H7M17 7V17" />
                                 </svg>
                               </a>
+                            )}
+                            {project.images.length > 1 && (
+                              <div
+                                class="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-10"
+                                data-image-dots
+                              >
+                                {project.images.map((_, imgIndex) => (
+                                  <button
+                                    class="h-1.5 rounded-full transition-all duration-300 focus:outline-none"
+                                    data-img-index={imgIndex}
+                                    aria-label={`Image ${imgIndex + 1}`}
+                                    style={imgIndex === 0
+                                      ? "width:16px;background-color:rgba(255,255,255,0.95)"
+                                      : "width:6px;background-color:rgba(255,255,255,0.45)"}
+                                  />
+                                ))}
+                              </div>
                             )}
                           </div>
                         ) : (
@@ -254,5 +269,42 @@ const accent = siteConfig.accentColor;
   carousel.addEventListener("keydown", (e) => {
     if (e.key === "ArrowRight") goTo(current + 1);
     if (e.key === "ArrowLeft") goTo(current - 1);
+  });
+</script>
+
+<script>
+  // Auto-rotating inner image carousels (one per project)
+  document.querySelectorAll("[data-image-carousel]").forEach((carousel) => {
+    const track = carousel.querySelector("[data-image-track]");
+    const dotsContainer = carousel.querySelector("[data-image-dots]");
+    const dots = dotsContainer
+      ? Array.from(dotsContainer.querySelectorAll("button"))
+      : [];
+    let imgCurrent = 0;
+    const imgTotal = dots.length || 1;
+
+    function goToImage(index) {
+      imgCurrent = ((index % imgTotal) + imgTotal) % imgTotal;
+      track.style.transform = `translateX(-${imgCurrent * 100}%)`;
+      dots.forEach((dot, i) => {
+        dot.style.width = i === imgCurrent ? "16px" : "6px";
+        dot.style.backgroundColor =
+          i === imgCurrent
+            ? "rgba(255,255,255,0.95)"
+            : "rgba(255,255,255,0.45)";
+      });
+    }
+
+    dots.forEach((dot, i) => {
+      dot.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        goToImage(i);
+      });
+    });
+
+    if (imgTotal > 1) {
+      setInterval(() => goToImage(imgCurrent + 1), 3000);
+    }
   });
 </script>
